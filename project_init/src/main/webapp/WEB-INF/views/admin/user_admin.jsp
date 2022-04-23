@@ -243,7 +243,7 @@ $("#user-li-ban").click(function(){
 	$("#modalBtn2").trigger("click");
 });
 
-//회원 탈퇴 확인 버튼 클릭 시 
+//회원 탈퇴 확인 버튼 클릭 시 DB에서 유저 데이터 삭제
 $("#yesBtn").click(function(){
 	
 	let nick = $("#searchNick").val();
@@ -268,7 +268,7 @@ $("#yesBtn").click(function(){
 	});
 });
 
-//회원 비활성화 버튼 클릭 시
+//회원 비활성화 버튼 클릭 시 DB의 userinfo table의 userEnabled컬럼의 값 0으로 변경
 $("#disabledBtn").click(function(){
 	
 	let nick = $("#searchNick").val();
@@ -293,7 +293,7 @@ $("#disabledBtn").click(function(){
 	});
 });
 
-//회원 활성화 버튼 클릭 시
+//회원 활성화 버튼 클릭 시 DB의 userinfo table의 userEnabled컬럼의 값 1로 변경
 $("#activateBtn").click(function(){
 
 	let nick = $("#searchNick").val();

@@ -1,5 +1,6 @@
 //메인 필터객체 생성
 var mainFilter = document.querySelector('.main-filter');
+
 //메인 필터 객체에 변화가 생겼을 때 이벤트가 실행될 수 있는 onchange이벤트 생성
 mainFilter.onchange = function(){
 	var subFilter = document.querySelector('.sub-filter');
@@ -40,23 +41,28 @@ mainFilter.onchange = function(){
 		subFilter.append(option); // 서브필터에 option태그 넣기
 	}
 }
+
 //검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
+
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 	mapOption = {
     center: new kakao.maps.LatLng(37, 127), // 지도의 중심좌표
     level: 13 // 지도의 확대 레벨
 };
+
 var map = new kakao.maps.Map(mapContainer, mapOption);
+
 map.setMaxLevel(13); //지도 확대 최대 레벨
+
 //마커 클러스터러를 생성합니다 
 var clusterer = new kakao.maps.MarkerClusterer({
     map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
     averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
     minLevel: 10, // 클러스터 할 최소 지도 레벨
-    disableClickZoom: true, // 클러스터 마커를 클릭했을 때 지도가 확대 되도록 설정한다
-    calculator: [10, 20, 30], // 클러스터의 크기 구분 값(10개, 20개, 30개 마다 다르게), 각 사이값마다 설정된 text나 style이 적용된다
-    styles: [{ // calculator 각 사이 값 마다 적용될 스타일을 지정한다
+    disableClickZoom: true, // 클러스터 마커를 클릭했을 때 지도가 확대 되도록 설정
+    calculator: [10, 20, 30], // 클러스터의 크기 구분 값(10개, 20개, 30개 마다 다르게), 각 사이값마다 설정된 text나 style이 적용
+    styles: [{ // calculator 각 사이 값 마다 적용될 스타일을 지정
         width : '30px', height : '30px',
         background: 'rgba(51, 204, 255, .8)',
         borderRadius: '15px',
@@ -94,6 +100,7 @@ var clusterer = new kakao.maps.MarkerClusterer({
     }
 	]
 });
+
  $('#filterbtn').click(function(e){
 	e.preventDefault(); 
 	
@@ -155,9 +162,9 @@ var clusterer = new kakao.maps.MarkerClusterer({
 		case "All Places" : value4 = "1";
 		break;
 	}
+	
 	clusterer.clear(); //이전에 생성된 마커들 제거 
 	
-	console.log(userId, value1, value2, value3, value4);
 	$.ajax({
 			url : "getAllPlansMap.do",
 			type : "post",
@@ -233,26 +240,18 @@ var clusterer = new kakao.maps.MarkerClusterer({
 						feedMapObj.post = post[j].postNo;
 					}	
 				}
-				
-				
-				
-				
-												
+											
 				(function(marker, feedMapObj) { //이벤트 등록
 					kakao.maps.event.addListener(marker, 'mouseover', function() { //마커에 마우스 올렸을 때
 			            displayInfowindow(marker, feedMapObj); // displayInfowindow()에서 처리
 			        });	
 					
-				    kakao.maps.event.addListener(marker, 'click', function() { // 마커를 클릭했을 때 인포창 닫기
+				    kakao.maps.event.addListener(marker, 'click', function() { // 마커를 클릭했을 때 infowindow 닫기
 			            infowindow.close();
 			        }); 	
 				})(marker, feedMapObj);
 				};
-				clusterer.addMarkers(markers); // 클러스터러에 마커들을 추가
-				
-				
-
-				
+				clusterer.addMarkers(markers); // 클러스터러에 마커들을 추가		
 			},
 			error : function(data) {
 				alert('필터를 다시 설정해주세요.');
@@ -303,16 +302,17 @@ function displayInfowindow(marker, feedMapObj) { //인포윈도우 생성
 	$('div.wrap').parent().parent().css('border', 'none');
 	$('div.wrap').parent().parent().css('background-color', 'transparent');
  }
-//마커 클러스터러에 클릭이벤트를 등록합니다
+ 
+//마커 클러스터러에 클릭이벤트를 등록
 //마커 클러스터러를 생성할 때 disableClickZoom을 true로 설정하지 않은 경우
-//이벤트 헨들러로 cluster 객체가 넘어오지 않을 수도 있습니다
+//이벤트 헨들러로 cluster 객체가 넘어오지 않을 수도 있음
 kakao.maps.event.addListener(clusterer, 'clusterclick', function(cluster) {
 	
-// 현재 지도 레벨에서 1레벨 확대한 레벨
- var level = map.getLevel()-1;
-	
-// 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확대합니다
- map.setLevel(level, {anchor: cluster.getCenter()});
+	// 현재 지도 레벨에서 1레벨 확대한 레벨
+	 var level = map.getLevel()-1;
+		
+	// 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확
+	 map.setLevel(level, {anchor: cluster.getCenter()});
 });
 
 $(document).on('click', 'button.post_link', function(e) {

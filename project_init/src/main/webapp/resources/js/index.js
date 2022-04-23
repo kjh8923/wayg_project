@@ -1,12 +1,14 @@
 
-
-
 //메인 필터객체 생성
 var mainFilter = document.querySelector('.main-filter');
+
 //메인 필터 객체에 변화가 생겼을 때 이벤트가 실행될 수 있는 onchange이벤트 생성
 mainFilter.onchange = function(){
+
 	var subFilter = document.querySelector('.sub-filter');
+	
 	var mainOption = mainFilter.options[mainFilter.selectedIndex].innerText;
+	
 	//서브필터의 option 생성	
 	var subOption = {
 		allMarker : ['All Places'],
@@ -43,21 +45,25 @@ mainFilter.onchange = function(){
 		subFilter.append(option); // 서브필터에 option태그 넣기
 	}
 }
+
 var map = new kakao.maps.Map(document.getElementById('map'), { // 지도를 표시할 div
     center : new kakao.maps.LatLng(36.1372611294738, 128.09319902660602), // 지도의 중심좌표 
     level : 13 // 지도의 확대 레벨 
 });
+
 map.setMaxLevel(14); //지도 확대 최대 레벨
+
 //검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
+
 // 마커 클러스터러를 생성 
 var clusterer = new kakao.maps.MarkerClusterer({
     map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
     averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
     minLevel: 10, // 클러스터 할 최소 지도 레벨
-    disableClickZoom: true, // 클러스터 마커를 클릭했을 때 지도가 확대 되도록 설정한다
-    calculator: [10, 20, 30], // 클러스터의 크기 구분 값(10개, 20개, 30개 마다 다르게), 각 사이값마다 설정된 text나 style이 적용된다
-    styles: [{ // calculator 각 사이 값 마다 적용될 스타일을 지정한다
+    disableClickZoom: true, // 클러스터 마커를 클릭했을 때 지도가 확대 되도록 설정
+    calculator: [10, 20, 30], // 클러스터의 크기 구분 값(10개, 20개, 30개 마다 다르게), 각 사이값마다 설정된 text나 style이 적용
+    styles: [{ // calculator 각 사이 값 마다 적용될 스타일을 지정
         width : '30px', height : '30px',
         background: 'rgba(51, 204, 255, .8)',
         borderRadius: '15px',
@@ -169,8 +175,9 @@ $('#filterbtn').click(function(e){
 		case "All Places" : value4 = "1";
 		break;
 	}
+	
 	clusterer.clear(); //이전에 생성된 마커들 제거
-	console.log(value1, value2, value3, value4)
+	
 	$.ajax({
 		url : 'filter',
 		type: 'get',
@@ -190,11 +197,11 @@ $('#filterbtn').click(function(e){
 		        })
 				markers.push(marker);
 				
-				var placeName = [];
+				var placeName = []; // infowindow에 표시할 장소이름 배열 생성
 				placeName.push(data[i].placeName);
-				var address=[];
+				var address=[]; // infowindow에 표시할 주소 배열 생성
 				address.push(data[i].address);
-				var category = []; //카테고리
+				var category = []; // infowindow에 표시할 카테고리 배열 생성
 				
 				switch(data[i].category){ // DB에는 카테고리의 code값이 들어가므로 code를 카테고리 명으로 변경
 					case "MT1" : category.push("대형마트");
@@ -234,12 +241,12 @@ $('#filterbtn').click(function(e){
 					case "PM9" : category.push("약국");
 					break;
 				}
-				(function(marker, placeName, address, category) { //이벤트 등록
+				(function(marker, placeName, address, category) { // infowindow 이벤트 등록
 					kakao.maps.event.addListener(marker, 'mouseover', function() { //마커에 마우스 올렸을 때
 			            displayInfowindow(marker, placeName, address, category); // displayInfowindow()에서 처리
 			        });
 			
-				    kakao.maps.event.addListener(marker, 'mouseout', function() { // 마커에 마우스 치웠을 때 인포창 닫기
+				    kakao.maps.event.addListener(marker, 'mouseout', function() { // 마커에 마우스 치웠을 때 infowindow 닫기
 			            infowindow.close();
 			        }); 	
 				})(marker, placeName, address, category);
@@ -252,7 +259,10 @@ $('#filterbtn').click(function(e){
 		}
 	});	
 });
-function displayInfowindow(marker, placeName, address, category) { //인포윈도우 생성
+
+function displayInfowindow(marker, placeName, address, category) { //infowindow 생성
+	
+	// infowindow창 생성
 	var content = '<div class="wrap">' + 
 		       '<div class="info">' + 
 	           '<div class="title bg-info">' + 
@@ -281,15 +291,15 @@ function displayInfowindow(marker, placeName, address, category) { //인포윈�
 }
 
 
-// 마커 클러스터러에 클릭이벤트를 등록합니다
+// 마커 클러스터러에 클릭이벤트를 등록
 // 마커 클러스터러를 생성할 때 disableClickZoom을 true로 설정하지 않은 경우
-// 이벤트 헨들러로 cluster 객체가 넘어오지 않을 수도 있습니다
+// 이벤트 헨들러로 cluster 객체가 넘어오지 않을 수도 있음
 kakao.maps.event.addListener(clusterer, 'clusterclick', function(cluster) {
 	
 	// 현재 지도 레벨에서 1레벨 확대한 레벨
     var level = map.getLevel()-1;
 	
- 	// 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확대합니다
+ 	// 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확대
     map.setLevel(level, {anchor: cluster.getCenter()});
 });
 
@@ -417,12 +427,7 @@ $(document).ready(function() {
 	 		}
 		});
 		getComments(postNo, email);
-	});
-	
-	
-
-	
-	
+	});	
 });
 
 

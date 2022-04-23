@@ -328,8 +328,6 @@ $(document).ready(function(){
 			});
 		}
 		
-		console.log(value1, value2);
-		
 		$.ajax({
 			type : 'POST',
 			url : 'placesDashBoard', //서버에서 그래프용 데이터 처리 요청
@@ -339,12 +337,12 @@ $(document).ready(function(){
 				var header = $("meta[name='_csrf_header']").attr('content');
 		        xhr.setRequestHeader(header, token);
 			},
-			success : function(data) { //result는 서버에서 오는 json형태 값
+			success : function(data) { 
 				console.log(data);
 			
 				for(i=0; i<data.length; i++) {
 					pChartLabels.push(data[i].placeName);
-					pChartData.push(data[i].count);
+					pChartData.push(data[i].count); //장소의 갯수
 				};
 				createChart();
 			},
@@ -364,7 +362,7 @@ $(document).ready(function(){
 		let value1 = $("#uSelBox").val();
 		
 		switch(value1){ // DB에는 카테고리의 code값이 들어가므로 code를 카테고리 명으로 변경
-			case "년도 별 가입자 수" : value1 = "'YYYY'";
+			case "년도 별 가입자 수" : value1 = "'YYYY'"; // mapper에서 컬럼 userjoindate 값을 ${value1}으로 지정, $는 ''이 붙지 않기 때문에 여기서 임의로 '' 붙임
 			break;
 			case "월 별 가입자 수" : value1 = "'YYYY-MM'";
 			break;
@@ -372,11 +370,9 @@ $(document).ready(function(){
 			break;
 		}
 		
-		console.log(value1);
-		
-		let value2;
+		let value2; // 컬럼 userjoindate의 값
 			
-		switch(value1){
+		switch(value1){ // value1의 값에 따라 다르게 설정
 			case "'YYYY'" : value2 = "YYYY";
 			break;
 			case "'YYYY-MM'" : value2 = "YYYY-MM";
@@ -385,13 +381,8 @@ $(document).ready(function(){
 			break;
 		}
 		
-		console.log(value2);
-		
-		let value3 = $('#uvalue3').val();
-		let value4 = $('#uvalue4').val();
-		
-		console.log(value3);
-		console.log(value4);
+		let value3 = $('#uvalue3').val(); // 사용자가 원하는 날짜 사이값
+		let value4 = $('#uvalue4').val(); // 사용자가 원하는 날짜 사이값
 		
 		let uChartLabels = []; //장소 표시 배열 초기화
 		let uChartData = []; // top.5 장소
@@ -466,8 +457,6 @@ $(document).ready(function(){
 			});
 		}
 		
-		console.log(value1, value2 ,value3, value4);
-		
 		$.ajax({
 			type : 'POST',
 			url : 'userDashBoard', //서버에서 그래프용 데이터 처리 요청
@@ -477,7 +466,7 @@ $(document).ready(function(){
 				var header = $("meta[name='_csrf_header']").attr('content');
 		        xhr.setRequestHeader(header, token);
 			},
-			success : function(data) { //result는 서버에서 오는 json형태 값
+			success : function(data) { 
 				console.log(data);
 			
 				for(i=0; i<data.length; i++) {
@@ -501,7 +490,7 @@ $(document).ready(function(){
 		
 		let gChartLabels = []; //성별 표시 배열 초기화
 		let gChartData = []; // 성별 카운트 수
-		console.log(gChartData);
+
 		//그래프를 그릴 수 있도록 가공해둔 변수
 		let PieChartData = {
 			labels : gChartLabels,
@@ -579,7 +568,7 @@ $(document).ready(function(){
 		
 		let aChartLabels = []; //연령대 표시 배열 초기화
 		let aChartData = []; // 연령대 별 카운트 수
-		console.log(aChartData);
+
 		//그래프를 그릴 수 있도록 가공해둔 변수
 		let PieChartData = {
 			labels : aChartLabels,
@@ -625,7 +614,7 @@ $(document).ready(function(){
 				window.dashBoardChart.destroy();
 			}
 			window.dashBoardChart = new Chart(document.getElementById("canvas").getContext("2d"),{
-				type:'pie',
+				type:'pie', // 파이 그래프
 				data: PieChartData,
 				options: {
 					responsive: true
@@ -641,7 +630,7 @@ $(document).ready(function(){
 				var header = $("meta[name='_csrf_header']").attr('content');
 		        xhr.setRequestHeader(header, token);
 			},
-			success : function(data) { //result는 서버에서 오는 json형태 값
+			success : function(data) { 
 				console.log(data);
 				
 				for(i=0; i<data.length; i++) {
@@ -656,7 +645,7 @@ $(document).ready(function(){
 		});
 	});
 	
-	$('#pfilterbtn').trigger('click');
+	$('#pfilterbtn').trigger('click'); //처음 페이지 생성시 장소별 통계 화면에 띄우기
 });
 </script>
 </body>
