@@ -30,11 +30,4 @@ public class ChatRoomDao {
 	public ChatRoomDto findRoomById(String id) {
 		return chatRoomDtoMap.get(id);
 	}
-	
-//	public ChatRoomDto createChatRoomDto(String name) {
-//		ChatRoomDto room = ChatRoomDto.create(name);
-//		chatRoomDtoMap.put(room.getRoomId(), room);
-//		
-//		return room;
-//	}
 }

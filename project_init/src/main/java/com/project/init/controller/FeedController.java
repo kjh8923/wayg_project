@@ -67,17 +67,19 @@ public class FeedController {
 		Constant.passwordEncoder = passwordEncoder;
 	}
 	
-	
+	// myfeed Calendar page
 	@RequestMapping("")
 	public String feed(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		User user = (User)authentication.getPrincipal();
 		String uId = user.getUsername();
 		
+		// feed 상단에 표시될 일정 개수와 포스트 개수
 		UserDto dto = udao.login(uId);
 		int planCount = dao.countPlanMst(uId);
 		int postCount = postDao.countPost(uId);
 		
+		// 유저 정보(dto), 일정 개수, 포스트 개수를 feed_calendar 페이지로 전달
 		model.addAttribute("user", dto);
 		model.addAttribute("planCount", planCount);
 		model.addAttribute("postCount", postCount);
@@ -86,6 +88,7 @@ public class FeedController {
 		return "feed/feed_calendar";
 	}
 	
+	// 캘린더에 표시될 전체 일정 불러오기
 	@ResponseBody
 	@RequestMapping(value="getAllPlans.do", produces="application/json; charset=UTF-8")
 	public ArrayList<PlanMstDto> getAllPlans() {
@@ -102,6 +105,7 @@ public class FeedController {
 		return result;
 	}
 	
+	// 캘린더 일정 클릭 시 modal창에 표시할 planDt 불러오기
 	@ResponseBody
 	@RequestMapping(value = "modify_modal.do", produces="application/json; charset=UTF-8")
 	public ArrayList<PlanDtDto> modifyModal(@RequestBody String planNum, Model model) {
@@ -118,7 +122,7 @@ public class FeedController {
 		return result;
 	}
 	
-	
+	// modal창에서 planMst 정보 수정 시
 	@ResponseBody
 	@RequestMapping(value = "modify_plan.do", produces="application/text; charset=UTF-8")
 	public String modifyPlan(HttpServletRequest request) {
@@ -135,6 +139,7 @@ public class FeedController {
 		return result;
 	}
 	
+	// modal창에서 planMst 정보 삭제 시
 	@ResponseBody
 	@RequestMapping(value = "delete_plan.do", produces="application/text; charset=UTF-8")
 	public String deleteMstPlan(@RequestBody String planNum) {
@@ -149,7 +154,7 @@ public class FeedController {
 		return result;
 	}
 	
-	
+	// feedMap Page
 	@RequestMapping("feedMap")
 	public String feedMap(Model model) {
 		logger.info("feedMap() in >>>>");
@@ -168,7 +173,8 @@ public class FeedController {
 		
 		return "feed/feed_map";
 	}
-
+	
+	// feedMap Page에서 filter 버튼 클릭 시
 	@ResponseBody
 	@RequestMapping(value="getAllPlansMap.do", produces="application/json; charset=UTF-8")
 	public ArrayList<Object> getAllPlansMap(HttpServletRequest request, Model model) {
@@ -186,6 +192,7 @@ public class FeedController {
 		return result;
 	}
 	
+	// feedMap Page post 등록된 planDt의 포스트 상세보기 버튼 클릭 시 
 	@ResponseBody
 	@RequestMapping(value="getMapPost.do", produces="application/json; charset=UTF-8")
 	public PostDto getMapPost(HttpServletRequest request, Model model) {
@@ -202,8 +209,7 @@ public class FeedController {
 		return dto;
 	}
 	
-	
-	
+	// mypage
 	@RequestMapping("feedInfo")
 	public String feedInfo(HttpServletRequest request, HttpServletResponse response, Model model) {
 		logger.info("feedInfo() in >>>>");
@@ -227,7 +233,7 @@ public class FeedController {
 	}
 	
 	
-	// 프로필 이미지 변경
+	//프로필사진 등록
 	@RequestMapping("add_PrfImg")
 	public String add_PrfImg(MultipartHttpServletRequest mtpRequest, HttpServletRequest request, Model model) {
 		logger.info("add_PrfImg() in >>>>");
@@ -237,16 +243,13 @@ public class FeedController {
 		String uId = user.getUsername();
 		
 		
-		String olduPrfImg = udao.getolduPrfImg(uId);
-		String uPrfImg = null;
+		String olduPrfImg = udao.getolduPrfImg(uId); //이미 DB에 저장돼있는 이미지사진 이름 가져오기
+		String uPrfImg = null; //DB저장용 파일명
 		
 		MultipartFile mf = mtpRequest.getFile("pImg");
 		
 		String path = "C:/kjh/eclipse/workspaceWEB/project_init/src/main/webapp/resources/profileImg/";
 		String path1 = "C:/kjh/apache-tomcat-9.0.56/wtpwebapps/project_init/resources/profileImg/";
-		
-		//String path = "F:/init/init_project/projectTest/project_init/src/main/webapp/resources/profileImg/";
-		//String path1 = "F:/init/init_project/projectTest/apache-tomcat-9.0.56/wtpwebapps/project_init/resources/profileImg/";
 		String originFileName = mf.getOriginalFilename();
 		
 		long prename = System.currentTimeMillis();
@@ -273,7 +276,7 @@ public class FeedController {
 			try {
 				mf.transferTo(new File(safeFile));
 				mf.transferTo(new File(safeFile1));
-				
+				//기존 저장돼있던 사진 삭제
 				File file = new File(path + olduPrfImg);
 				File file1 = new File(path1 + olduPrfImg);
 				if(file.exists()) {
@@ -304,13 +307,10 @@ public class FeedController {
 		String olduPrfImg = udao.getolduPrfImg(uId);
 		
 		udao.deletePrfImg(uId);
-
+		
 		String path = "C:/kjh/eclipse/workspaceWEB/project_init/src/main/webapp/resources/profileImg/";
 		String path1 = "C:/kjh/apache-tomcat-9.0.56/wtpwebapps/project_init/resources/profileImg/";
-		
-		//String path = "F:/init/init_project/projectTest/project_init/src/main/webapp/resources/profileImg/";
-		//String path1 = "F:/init/init_project/projectTest/apache-tomcat-9.0.56/wtpwebapps/project_init/resources/profileImg/";
-		
+		//기존 저장돼있던 사진 삭제
 		File file = new File(path + olduPrfImg);
 		File file1 = new File(path1 + olduPrfImg);
 		if(file.exists()) {
@@ -323,7 +323,7 @@ public class FeedController {
 		return "redirect:/feed/feedInfo";
 	}
 	
-	
+	//마이페이지 수정
 	@RequestMapping("modifyMyPage")
 	@ResponseBody
 	public String modifyMyPage(@RequestParam(value="userNick") String userNick, 
@@ -358,7 +358,7 @@ public class FeedController {
 			return "not-modified";
 	}
 	
-	//占쏙옙橘占싫� 占쏙옙占쏙옙 占쏙옙 占쏙옙橘占싫� 확占쏙옙
+	//비밀번호 변경 전 비밀번호 확인
 	@RequestMapping(value="chkPwForMdf", method=RequestMethod.POST, produces = "application/text; charset=UTF8")
 	@ResponseBody
 	public String chkPwForMdf(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -386,7 +386,7 @@ public class FeedController {
 		return result;
 	}
 	
-	
+	//비밀번호 변경
 	@RequestMapping(value="modifyPw", method=RequestMethod.POST, produces = "application/text; charset=UTF8")
 	@ResponseBody
 	public String modifyPw(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -405,7 +405,7 @@ public class FeedController {
 			return "pw-not-modified";
 	}
 	
-	
+	//회원탈퇴시 비밀번호 확인
 	@RequestMapping(value="chkPwForResig", method=RequestMethod.POST, produces = "application/text; charset=UTF8")
 	@ResponseBody
 	public String chkPwForResig(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -433,7 +433,7 @@ public class FeedController {
 		return result;
 	}
 	
-	
+	//회원탈퇴
 	@RequestMapping(value="resignation")
 	public String resignation() {
 		logger.info("resignation() in >>>>");
@@ -444,7 +444,7 @@ public class FeedController {
 		
 		
 		udao.resign(uId);
-		SecurityContextHolder.clearContext();
+		SecurityContextHolder.clearContext();//회원탈퇴시 로그아웃 위해
 		
 		return "redirect:/";
 	}

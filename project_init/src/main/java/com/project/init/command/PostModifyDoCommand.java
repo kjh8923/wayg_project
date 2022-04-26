@@ -37,11 +37,9 @@ public class PostModifyDoCommand implements ICommand {
 		List<MultipartFile> fileList = multi.getFiles("img");
 
 		PostDto dto = null;
+		
 		String path = "C:/kjh/eclipse/workspaceWEB/project_init/src/main/webapp/resources/images/";
 		String path1 = "C:/kjh/apache-tomcat-9.0.56/wtpwebapps/project_init/resources/images/";
-		
-		//String path = "F:/init/init_project/projectTest/project_init/src/main/webapp/resources/images/";
-		//String path1 = "F:/init/init_project/projectTest/apache-tomcat-9.0.56/wtpwebapps/project_init/resources/images/";
 		
 		if ( fileList.get(0).getOriginalFilename() != ""  ) {
 		

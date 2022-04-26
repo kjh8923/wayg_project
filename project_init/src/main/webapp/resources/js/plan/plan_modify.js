@@ -39,11 +39,11 @@ $(document).ready(function() {
 				
 				// db에서 불러온 값으로 marker를 생성
 				var imageSrc = '/init/images/marker.png', // 마커이미지의 경로
-			    imageSize = new kakao.maps.Size(50, 50), // 마커이미지의 크기
-			    imageOption = {offset: new kakao.maps.Point(10, 69)}; // 마커이미지의 옵션. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정
+			    imageSize = new kakao.maps.Size(50, 50), // 마커이미지의 크기입니다
+			    imageOption = {offset: new kakao.maps.Point(10, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 				
 				var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption), //마커 이미지 옵션을 markerImage객체에 담기
-			    markerPosition = new kakao.maps.LatLng(lat, lng); // 마커가 표시될 위치
+			    markerPosition = new kakao.maps.LatLng(lat, lng); // 마커가 표시될 위치입니다
 				
 				var marker = new kakao.maps.Marker({ //설정한 좌표와 이미지 마커 객체에 담기
 					position: markerPosition, //마커 좌표 설정
@@ -69,12 +69,69 @@ $(document).ready(function() {
 		var p_address = markers2[i].address;
 		var p_category = markers2[i].category;
 		
+				switch(p_category){ // DB에는 카테고리의 code값이 들어가므로 code를 카테고리 명으로 변경
+			case "MT1" : 
+				p_category = "대형마트";
+				break;
+			case "CS2" : 
+				p_category = "편의점";
+				break;
+			case "PS3" : 
+				p_category = "어린이집, 유치원";
+				break;
+			case "SC4" : 
+				p_category = "학교";
+				break;
+			case "AC5" : 
+				p_category = "학원";
+				break;
+			case "PK6" : 
+				p_category = "주차장";
+				break;
+			case "OL7" : 
+				p_category = "주유소, 충전소";
+				break;
+			case "SW8" : 
+				p_category = "지하철역";
+				break;
+			case "BK9" : 
+				p_category = "은행";
+				break;
+			case "CT1" : 
+				p_category = "문화시설";
+				break;
+			case "AG2" : 
+				p_category = "중개업소";
+				break;
+			case "PO3" : 
+				p_category = "공공기관";
+				break;
+			case "AT4" : 
+				p_category = "관광명소";
+				break;
+			case "PO3" : 
+				p_category = "숙박";
+				break;
+			case "FD6" : 
+				p_category = "음식점";
+				break;
+			case "CE7" : 
+				p_category = "카페";
+				break;
+			case "HP8" : 
+				p_category = "병원";
+				break;
+			case "PM9" : 
+				p_category = "약국";
+				break;
+		}
+		
 		(function(p_marker, p_placeName, p_address, p_category) { //이벤트 등록
 			kakao.maps.event.addListener(p_marker, 'mouseover', function() { //마커에 마우스 올렸을 때
 	        	displayInfowindow(p_marker, p_placeName, p_address, p_category); // displayInfowindow()에서 처리
 	    	});
 	
-	    	kakao.maps.event.addListener(p_marker, 'mouseout', function() { // 마커에 마우스 치웠을 때 infowindow 닫기
+	    	kakao.maps.event.addListener(p_marker, 'mouseout', function() { // 마커에 마우스 치웠을 때 인포창 닫기
 	        	infowindow.close();
 	    	});
 		})(p_marker, p_placeName, p_address, p_category);
