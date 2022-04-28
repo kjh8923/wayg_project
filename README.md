@@ -1,2 +1,2 @@
 # wayg_project
-.
+..
